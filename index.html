@@ -5,101 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Falar com Suporte</title>
     <style>
-body {
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: linear-gradient(45deg, #007BFF, #FFA500, #ffffff);
-    background-size: 300% 300%;
-    animation: gradientAnimation 10s ease infinite;
-}
-
-@keyframes gradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-.container {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    background: #ffffff;
-    padding: 40px; /* Aumentado para deixar as caixas maiores */
-    border-radius: 15px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    opacity: 0;
-    width: 100%; /* Para melhorar o responsivo */
-    max-width: 450px; /* Largura máxima para as caixas */
-}
-
-.active {
-    display: flex;
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.container h2 {
-    margin-bottom: 20px;
-    color: #333;
-}
-
-input, textarea {
-    margin: 10px 0;
-    padding: 12px;
-    width: 100%;
-    border: 2px solid #007BFF;
-    border-radius: 5px;
-    transition: border-color 0.3s ease;
-}
-
-input:focus, textarea:focus {
-    border-color: #0056b3;
-    outline: none;
-}
-
-textarea {
-    height: 120px; /* Aumentado para o textarea */
-    resize: none; /* Impede o redimensionamento do textarea */
-}
-
-button {
-    padding: 15px 25px; /* Aumentado para o botão */
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    font-weight: bold;
-    font-size: 16px; /* Aumentando o tamanho da fonte do botão */
-}
-
-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px); /* Efeito de elevação ao passar o mouse */
-}
-
-button:active {
-    transform: translateY(0); /* Retorna ao normal ao clicar */
-}
-
-@media (max-width: 480px) {
-    input, textarea, button {
-        width: 90%;
-    }
-}
-
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #007BFF, #FFA500, #ffffff);
+            background-size: 300% 300%;
+            animation: gradientAnimation 10s ease infinite;
+            margin: 0;
+        }
+        @keyframes gradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .active {
+            display: flex;
+        }
+        input, textarea {
+            margin: 10px 0;
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .alert {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
     </style>
 </head>
 <body>
@@ -124,11 +101,17 @@ button:active {
         <button onclick="sendEmail()">Enviar</button>
     </div>
 
+    <div class="alert" id="alert">
+        <p>Agradecemos! Sua mensagem será enviada para o e-mail do celular.</p>
+        <p>Redirecionando em <span id="countdown">10</span> segundos...</p>
+    </div>
+
     <script>
         const supportButton = document.getElementById('supportButton');
         const nameContainer = document.getElementById('nameContainer');
         const emailContainer = document.getElementById('emailContainer');
         const questionContainer = document.getElementById('questionContainer');
+        const alertDiv = document.getElementById('alert');
 
         supportButton.addEventListener('click', () => {
             nameContainer.classList.add('active');
@@ -152,9 +135,30 @@ button:active {
 
             const subject = encodeURIComponent('Suporte: ' + name);
             const body = encodeURIComponent(`Nome: ${name}\nE-mail: ${email}\nDúvida: ${question}`);
-            const mailtoLink = `blog.fui.viagens@gmail.com?subject=${subject}&body=${body}`;
+            const mailtoLink = `mailto:blog.fui.viagens@gmail.com?subject=${subject}&body=${body}`;
 
-            window.location.href = mailtoLink;
+            // Exibir aviso
+            alertDiv.style.display = 'flex';
+            startCountdown(10); // Iniciar contagem regressiva
+
+            // Enviar e-mail após 10 segundos
+            setTimeout(() => {
+                window.location.href = mailtoLink;
+            }, 10000); // 10000 milissegundos = 10 segundos
+        }
+
+        function startCountdown(seconds) {
+            const countdownElement = document.getElementById('countdown');
+            let counter = seconds;
+
+            const interval = setInterval(() => {
+                countdownElement.textContent = counter;
+                counter--;
+
+                if (counter < 0) {
+                    clearInterval(interval);
+                }
+            }, 1000); // Atualiza a cada 1 segundo
         }
     </script>
 

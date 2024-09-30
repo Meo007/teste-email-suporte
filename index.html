@@ -103,7 +103,6 @@
 
     <div class="alert" id="alert">
         <p>Agradecemos! Sua mensagem será enviada para o e-mail do celular.</p>
-        <p>Redirecionando em <span id="countdown">10</span> segundos...</p>
     </div>
 
     <script>
@@ -137,28 +136,9 @@
             const body = encodeURIComponent(`Nome: ${name}\nE-mail: ${email}\nDúvida: ${question}`);
             const mailtoLink = `mailto:blog.fui.viagens@gmail.com?subject=${subject}&body=${body}`;
 
-            // Exibir aviso
+            // Exibir aviso e abrir o e-mail imediatamente
             alertDiv.style.display = 'flex';
-            startCountdown(10); // Iniciar contagem regressiva
-
-            // Enviar e-mail após 10 segundos
-            setTimeout(() => {
-                window.location.href = mailtoLink;
-            }, 10000); // 10000 milissegundos = 10 segundos
-        }
-
-        function startCountdown(seconds) {
-            const countdownElement = document.getElementById('countdown');
-            let counter = seconds;
-
-            const interval = setInterval(() => {
-                countdownElement.textContent = counter;
-                counter--;
-
-                if (counter < 0) {
-                    clearInterval(interval);
-                }
-            }, 1000); // Atualiza a cada 1 segundo
+            window.location.href = mailtoLink;
         }
     </script>
 

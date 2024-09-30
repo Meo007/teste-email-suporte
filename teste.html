@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Falar com Suporte</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .active {
+            display: flex;
+        }
+        input, textarea {
+            margin: 10px 0;
+            padding: 10px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="supportButton">Falar com Suporte</button>
+
+    <div class="container" id="nameContainer">
+        <h2>Qual é o seu Nome?</h2>
+        <input type="text" id="name" required>
+        <button onclick="nextStep('email')">Próximo</button>
+    </div>
+
+    <div class="container" id="emailContainer">
+        <h2>Qual é o seu E-mail?</h2>
+        <input type="email" id="email" required>
+        <button onclick="nextStep('question')">Próximo</button>
+    </div>
+
+    <div class="container" id="questionContainer">
+        <h2>Qual é a sua dúvida?</h2>
+        <textarea id="question" required></textarea>
+        <button onclick="sendEmail()">Enviar</button>
+    </div>
+
+    <script>
+        const supportButton = document.getElementById('supportButton');
+        const nameContainer = document.getElementById('nameContainer');
+        const emailContainer = document.getElementById('emailContainer');
+        const questionContainer = document.getElementById('questionContainer');
+
+        supportButton.addEventListener('click', () => {
+            nameContainer.classList.add('active');
+            supportButton.style.display = 'none';
+        });
+
+        function nextStep(step) {
+            if (step === 'email') {
+                nameContainer.classList.remove('active');
+                emailContainer.classList.add('active');
+            } else if (step === 'question') {
+                emailContainer.classList.remove('active');
+                questionContainer.classList.add('active');
+            }
+        }
+
+        function sendEmail() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const question = document.getElementById('question').value;
+
+            const subject = encodeURIComponent('Suporte: ' + name);
+            const body = encodeURIComponent(`Nome: ${name}\nE-mail: ${email}\nDúvida: ${question}`);
+            const mailtoLink = `mailto:support@example.com?subject=${subject}&body=${body}`;
+
+            window.location.href = mailtoLink;
+        }
+    </script>
+
+</body>
+</html>
